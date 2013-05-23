@@ -15,26 +15,12 @@ RedditTracker.prototype.iterator = function(item, cb) {
   var _this = this;
   Post.findById(item.id, function(err, post){
     if(err) return cb(err);
-
     if(!post) {
-      console.log("Post: '" + item.id + "' not found");
       post = new Post(item);
       post._id = item.id;
-      post.save(function(err, post){
-        if(err) return cb(err);
-        _this.pushRank(post, item.rank, cb);
-      });
-    } else {
-      _this.pushRank(post, item.rank, cb);
     }
-  });
-};
-
-RedditTracker.prototype.pushRank = function(post, rank, cb) {
-  Post.update({ _id: post.id }, { $push: { ranks: rank }}, function(err, numAffected){
-    if(err) return cb(err);
-    console.log("Rank set on", post.id, ":", !!numAffected);
-    cb(null);
+    post.ranks.push(item.rank);
+    post.save(cb);
   });
 };
 
