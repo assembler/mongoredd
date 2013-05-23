@@ -3,6 +3,7 @@ var _ = require('underscore');
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/mongoredd');
+mongoose.set('debug', true);
 require('./post');
 
 var track = require('./reddit_tracker');
